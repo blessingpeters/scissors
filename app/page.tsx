@@ -1,113 +1,82 @@
-import Image from 'next/image'
+"use client"
+import Nav from "@/components/Nav";
+import Header from "@/components/Header";
+import PriceCard from "@/components/PriceCard";
+import Shortner from "@/components/Shortner";
+import Image from "next/image";
+import Faq from "@/components/Faq";
+
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="">
+      <section className="hero min-h-screen text-[#141414]">
+        <Nav />
+        <Header />
+      </section>
+      <section className="bg-[#F9FBFD] flex max-md:flex-col justify-between py-10 lg:px-24 md:px-10 max-md:px-3 gap-x-5">
+        <h2 className="text-4xl font-semibold leading-snug lg:flex-[60%]">One Stop. <br /> Four <span className="text-blue-600">Possibilities.</span></h2>
+        <div className="grid lg:grid-cols-4 grid-cols-2 ">
+          <div className="flex flex-col flex-1 gap-y-2 p-4">
+            <h3 className="text-3xl font-medium">3M</h3>
+            <p>Active users</p>
+          </div>
+          <div className="flex flex-col flex-1 gap-y-2 p-4">
+            <h3 className="text-3xl font-medium">60M</h3>
+            <p>Links & QR codes created</p>
+          </div>
+          <div className="flex flex-col flex-1 gap-y-2 p-4">
+            <h3 className="text-3xl font-medium">1B</h3>
+            <p>Clicked & Scanned connections</p>
+          </div>
+          <div className="flex flex-col flex-1 gap-y-2 p-4">
+            <h3 className="text-3xl font-medium">300K</h3>
+            <p>App Integrations</p>
+          </div>
         </div>
-      </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
+      </section>
+      <section className="flex max-lg:flex-col bg-white py-20 lg:px-24 md:px-10 max-md:px-3 lg:gap-x-10 gap-x-4">
+        <div className="flex-[98%]">
+          <h2 className="text-4xl font-semibold pl-4 leading-snug border-l-4 border-slate-800 border-spacing-2">Why choose <span className="text-blue-600">Scissors</span></h2>
+          <p className="m-4">
+            Scissors is the hub of everything that has to do with your link management. We shorten your URLs, allow you creating custom ones for your personal, business, event usage. Our swift QR code creation,
+            management and usage tracking with advance analytics for all of these is second to none.
           </p>
-        </a>
+        </div>
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+        <div className="grid grid-cols-2 gap-10 max-md:mt-6 lg:ml-8">
+          <div className="">
+            <Image src={"/images/link.svg"} alt="" width={56} height={56} />
+            <h3 className="lg:text-3xl text-2xl font-semibold my-4">URL Shortening</h3>
+            <p>Scissor allows you to shorten URLs of your business, events. Shorten your URL at scale, URL redirects.</p>
+          </div>
+          <div>
+            <Image src={"/images/edit.svg"} alt="" width={56} height={56} />
+            <h3 className="lg:text-3xl text-2xl font-semibold my-4">Custom URLs</h3>
+            <p>With Scissor, you can create custom URLs, with the length you want! A solution for socials and businesses.</p>
+          </div>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
+          <div className="">
+            <Image src={"/images/grid.svg"} alt="" width={56} height={56} />
+            <h3 className="lg:text-3xl text-2xl font-semibold my-4">QR Codes</h3>
+            <p>Generate QR codes to your business, events. Bring your audience and customers to your doorstep with this scan and go solution.</p>
+          </div>
+          <div className="flex flex-col justify-between">
+            <Image src={"/images/activity.svg"} alt="" width={56} height={56} />
+            <h3 className="lg:text-3xl text-2xl font-semibold my-4">Data Analytics</h3>
+            <p>Receive data on the usage of either your shortened URL, custom URLs or generated QR codes. Embedded to monitor progress.</p>
+          </div>
+        </div>
+      </section>
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      <PriceCard />
+      <Shortner />
+      <Faq />
+      <section className='bg-[#1E3448] flex flex-col justify-center items-center py-20 px-3'>
+        <h2 className="text-4xl text-white font-bold mb-10 text-center">Revolutionizing Link Optimization</h2>
+        <button className='text-white bg-blue-600 px-6 py-3 rounded-full cursor-pointer'>Get Started</button>
+      </section>
     </main>
   )
 }

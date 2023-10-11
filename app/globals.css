@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+/*
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -24,4 +27,36 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+} */
+.hero{
+  background: rgb(214,5,5);
+  background: linear-gradient(90deg, rgba(214,5,5,0.0746892507002801) 0%, rgba(220,228,235,0.5676864495798319) 39%, rgba(234,200,31,0.1195071778711485) 76%);
 }
+/* .shortner-bg{
+  background: linear-gradient(180deg, #1E3448 99.99%, rgba(30, 52, 72, 0) 100%);
+} */
+
+/* .or {
+  display: flex;
+  flex-direction: row;
+}
+.or:before, .or:after{
+  content: "";
+  flex: 1 1;
+  border-bottom: 1px solid black;
+  margin: auto;
+}
+.or:before {
+  margin-right: 10px
+}
+.or:after {
+  margin-left: 10px
+} */
+.or:after,
+.or:before{
+    content:"\00a0\00a0\00a0\00a0\00a0";
+    text-decoration:line-through;
+}
+/* .or{
+  width: 100%;
+} */
