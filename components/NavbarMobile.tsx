@@ -25,7 +25,7 @@ export default function NavbarMobile({ menus, openNav }: NavbarMobileProps) {
                     <div className="py-5 flex justify-between items-center">
                         <Link href="/" passHref>
                             <Image
-                                src="/logo.svg"
+                                src="Logo.svg"
                                 alt="scissors logo"
                                 width={120}
                                 height={40}

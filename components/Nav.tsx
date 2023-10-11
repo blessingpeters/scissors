@@ -75,7 +75,7 @@ export default function Nav() {
                 <>
                     <Link href="/" passHref>
                         <Image
-                            src="/logo.svg"
+                            src="Logo.svg"
                             alt="scissors logo"
                             width={120}
                             height={40}
