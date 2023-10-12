@@ -1,12 +1,9 @@
 import React from "react";
 import Image from "next/image";
-import image1 from "../public/assets/Group 2.svg";
-import image2 from "../public/assets/Group 3.svg";
-import PriceCard from "./PriceCard";
-import Shortner from "./Shortner";
-import Head from "next/head";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+    const router = useRouter()
     return (
         <>
             <div className="header flex flex-col justify-center items-center text-center max-md:px-3 mt-12 relative">
@@ -30,7 +27,7 @@ const Header = () => {
                     </p>
                 </div>
                 <div className="my-6">
-                    <button className="text-white bg-blue-600 px-6 py-2 rounded-full mr-7">
+                    <button className="text-white bg-blue-600 px-6 py-2 rounded-full mr-7" onClick={()=> router.push("/signup")}>
                         Sign Up
                     </button>
                     <button className="text-blue-600">Learn More</button>

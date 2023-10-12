@@ -5,9 +5,11 @@ import PriceCard from "@/components/PriceCard";
 import Shortner from "@/components/Shortner";
 import Image from "next/image";
 import Faq from "@/components/Faq";
+import { useRouter } from "next/navigation";
 
 
 export default function Home() {
+  const router = useRouter()
   return (
     <main className="">
       <section className="hero min-h-screen text-[#141414]">
@@ -75,7 +77,7 @@ export default function Home() {
       <Faq />
       <section className='bg-[#1E3448] flex flex-col justify-center items-center py-20 px-3'>
         <h2 className="text-4xl text-white font-bold mb-10 text-center">Revolutionizing Link Optimization</h2>
-        <button className='text-white bg-blue-600 px-6 py-3 rounded-full cursor-pointer'>Get Started</button>
+        <button className='text-white bg-blue-600 px-6 py-3 rounded-full cursor-pointer'onClick={()=> router.push("/signup")}>Get Started</button>
       </section>
     </main>
   )
