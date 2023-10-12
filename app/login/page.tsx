@@ -24,7 +24,7 @@ const Login = () => {
 
                 <p className='text-blue-600 text-right my-4'>Forgot your password?</p>
                 <button className= 'text-white w-full bg-blue-600 px-6 py-3 rounded-full cursor-pointer'>Login</button>
-                <p className='my-5 text-sm'>Don’t have an account? <a className='text-blue-600' href="/auth/signup">Sign up</a></p>
+                <p className='my-5 text-sm'>Don’t have an account? <a className='text-blue-600' href="/signup">Sign up</a></p>
                 <p className='text-xs'>By signing in with an account, you agree to</p>
                 <p className='text-xs'>Sciccors Terms of Service, Privacy Policy and Acceptable Use Policy.</p>
             </form>

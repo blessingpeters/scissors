@@ -6,53 +6,27 @@ import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menus from "./Menu";
+import { signOut, useSession } from 'next-auth/react'
 
 export default function Nav() {
     const router = useRouter();
     const [navOpen, setNavOpen] = useState(false);
 
+    const { data: session, status } = useSession();
+    console.log(session)
+
     const openNav = () => {
         setNavOpen(true);
-    };
-    // const ref = useRef();
-
-    // close dropdown if clicked outside
-
-    // useEffect(() => {
-    //   const handleClickOutside = (e: MouseEvent) => {
-    //     if (ref.current && !ref.current.contains(e.target as Node)) {
-    //       setNavOpen(false);
-    //     }
-    //   };
-
-    //   document.addEventListener("click", handleClickOutside);
-
-    //   return () => {
-    //     document.removeEventListener("click", handleClickOutside);
-    //   };
-    // }, []);
-
-    useEffect(() => {
-        const closeNav = () => {
-            setNavOpen(false);
-        };
-
-        window.addEventListener("resize", closeNav);
-        return () => window.removeEventListener("resize", closeNav);
-    }, []);
-
-    const handleClickOutside = () => {
-        setNavOpen(false);
     };
 
     const menus = [
         {
             text: "My URL",
-            href: "/auth/login",
+            href: "/login",
         },
         {
             text: "Features",
-            href: "/auth/signup",
+            href: "/signup",
         },
         {
             text: "Pricing",
@@ -68,6 +42,50 @@ export default function Nav() {
             href: "#",
         },
     ];
+    useEffect(() => {
+        const closeNav = () => {
+            setNavOpen(false);
+        };
+
+        window.addEventListener("resize", closeNav);
+        return () => window.removeEventListener("resize", closeNav);
+    }, []);
+
+    const handleClickOutside = () => {
+        setNavOpen(false);
+    };
+
+    useEffect(() => {
+        if (status === 'authenticated') {
+            // Optionally, redirect the user after they've signed in
+            router.push('/');
+        }
+    }, [status, router]);
+
+    const handleSignOut = async () => {
+        await signOut({ callbackUrl: '/' }); // redirect to homepage after sign-out
+    }
+
+ const renderAuthButtons = () => {
+        if (session && session.user) {
+            return (
+                <div className="flex items-center gap-x-2">
+                    <p className='max-md:text-xs'>{session?.user?.name}</p>
+                    {session.user.image && (
+                        <Image src={session?.user?.image} alt="user image" width={30} height={30} className="rounded-full" />
+                    )}
+                    <button className='max-md:text-xs text-red-600' onClick={handleSignOut}>Sign out</button>
+                </div>
+            );
+        } else {
+            return (
+                <div className="flex gap-x-2 md:gap-x-6 max-md:text-sm items-center">
+                    <Link href={"/login"} className='text-blue-600 font-semibold'>Login</Link>
+                    <Link href={"/signup"} className='text-white bg-blue-600 md:px-6 px-3 py-2 rounded-full font-semibold'>Try for free</Link>
+                </div>
+            );
+        }
+    };
 
 
     return (
@@ -90,10 +108,7 @@ export default function Nav() {
                     </div>
 
 
-                    <div className="flex gap-x-2 md:gap-x-6 max-md:text-sm">
-                        <button className='text-blue-600 font-semibold' onClick={() => router.push("/auth/signup")}>Login</button>
-                        <button className='text-white bg-blue-600  md:px-6 px-3 py-2 rounded-full font-semibold' onClick={() => router.push("/auth/login")}>Try for free</button>
-                    </div>
+                    {renderAuthButtons()}
 
                     <div
                         onClick={openNav}

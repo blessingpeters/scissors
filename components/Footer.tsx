@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import Link from 'next/link';
 
 
 type FooterData = {
@@ -103,8 +104,9 @@ export default function Footer() {
         <section className='lg:p-20 lg:px-24 md:px-10 max-md:px-3'>
             <div className='flex max-md:flex-col justify-evenly my-10'>
                 <div className='mr-6'>
-                    <Image className='mb-6' src="/images/Logodark.svg" alt="logo" width={155} height={40} />
-
+                    <Link href={"/"}>
+                        <Image className='mb-6' src="/images/Logodark.svg" alt="logo" width={155} height={40} />
+                    </Link>
                     <div className='flex space-x-6 max-md:mb-10'>
                         <Image src="/images/instagram.svg" alt="logo" width={24} height={24} />
                         <Image src="/images/twitter.svg" alt="logo" width={24} height={24} />
