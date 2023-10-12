@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 import { AppleBtn, GoogleBtn } from '@/components/common/AuthButton'
 
 
@@ -9,8 +8,8 @@ const Login = () => {
             <form className='text-center p-2 lg:w-[426px]'>
                 <p>Log in with:</p>
                 <div className='flex mt-6 gap-5 justify-center'>
-                <GoogleBtn />
-                   <AppleBtn />
+                    <GoogleBtn />
+                    <AppleBtn />
                 </div>
                 <p className='or my-6'>Or</p>
                 <div className='flex flex-col gap-8'>
@@ -19,7 +18,7 @@ const Login = () => {
                 </div>
 
                 <p className='text-blue-600 text-right my-4'>Forgot your password?</p>
-                <button className= 'text-white w-full bg-blue-600 px-6 py-3 rounded-full cursor-pointer'>Login</button>
+                <button className='text-white w-full bg-blue-600 px-6 py-3 rounded-full cursor-pointer'>Login</button>
                 <p className='my-5 text-sm'>Don’t have an account? <a className='text-blue-600' href="/signup">Sign up</a></p>
                 <p className='text-xs'>By signing in with an account, you agree to</p>
                 <p className='text-xs'>Sciccors Terms of Service, Privacy Policy and Acceptable Use Policy.</p>
