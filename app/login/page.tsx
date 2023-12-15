@@ -1,15 +1,16 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { AppleBtn, GoogleBtn } from '@/components/common/AuthButton'
 import Image from 'next/image';
 import { useRouter, redirect } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { SessionContext, getSession, signIn } from 'next-auth/react';
 
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const sessionContext = useContext(SessionContext)
 
     const router = useRouter()
 
@@ -22,7 +23,7 @@ const Login = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         setLoginError(''); // Clear any previous error message
-    
+
         try {
             const result = await signIn('credentials', {
                 email,
@@ -30,11 +31,20 @@ const Login = () => {
                 callbackUrl: '/',
                 redirect: false,  // Prevent automatic redirection
             });
-    
+
             if (result?.error) {
                 // If there's an error, set the error message to state to display to the user
                 setLoginError(result.error);
             } else {
+
+                if (sessionContext?.update) {
+                    // Fetch updated session data and update the context
+                    const updatedSession = await getSession(); // Make sure you have imported getSession
+                    sessionContext.update(updatedSession);
+                    console.log("Updated session:", updatedSession);
+                    // Redirect or perform other actions post login
+                  }
+                console.log({result})
                 // If signIn was successful, redirect or do something else
                 router.push('/');  // or whatever your logic needs
             }

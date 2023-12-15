@@ -24,10 +24,11 @@ function URLShortenerForm() {
 
     try {
       const response = await axios.post(
-        'https://cherubin-shortner.onrender.com/api/api/url',
+        'https://cherubin-shortner.onrender.com/api/url',
         {
-          url, // this is the long URL value
-          domain: 'scissors.com', // this value can be dynamic based on your needs
+          destination:url,
+          // url, // this is the long URL value
+          // domain: 'scissors.com', // this value can be dynamic based on your needs
           alias, // this is the alias for the URL
         },
         {
@@ -36,7 +37,7 @@ function URLShortenerForm() {
           },
         }
       );
-
+console.log({response})
       if (response.data?.shortenedUrl) {
         setShortenedUrl(response.data.shortenedUrl);
       }
