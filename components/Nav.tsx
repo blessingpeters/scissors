@@ -6,7 +6,7 @@ import { redirect, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menus from "./Menu";
-import { signOut, useSession } from 'next-auth/react'
+import { signOut, useSession, signIn, getSession } from 'next-auth/react';
 
 export default function Nav() {
     const router = useRouter();
@@ -55,22 +55,32 @@ export default function Nav() {
         setNavOpen(false);
     };
 
+    // useEffect(() => {
+    //     if (status === 'authenticated') {
+    //         // Optionally, redirect the user after they've signed in
+    //         router.push('/');
+    //     }
+    // }, [status, router]);
     useEffect(() => {
-        if (status === 'authenticated') {
-            // Optionally, redirect the user after they've signed in
-            router.push('/');
+        if (status === 'authenticated' && !session) {
+            // Refresh session after successful sign-in to ensure it contains user info
+            getSession().then(sessionData => {
+                console.log(sessionData); // This should now show the updated session with user info
+            });
+            // signIn(null, { callbackUrl: '/', redirect: false });
         }
-    }, [status, router]);
+    }, [status, session, router]);
+
 
     const handleSignOut = async () => {
         await signOut({ callbackUrl: '/' }); // redirect to homepage after sign-out
     }
 
  const renderAuthButtons = () => {
-        if (session && session.user) {
+        if (session?.user) {
             return (
                 <div className="flex items-center gap-x-2">
-                    <p className='max-md:text-xs'>{session?.user?.name}</p>
+                    <p className='max-md:text-xs'>Welcome, {session.user.name || session.user.email}!!</p>
                     {session.user.image && (
                         <Image src={session?.user?.image} alt="user image" width={30} height={30} className="rounded-full" />
                     )}

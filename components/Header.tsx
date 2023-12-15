@@ -8,7 +8,7 @@ const Header = () => {
         <>
             <div className="header flex flex-col justify-center items-center text-center max-md:px-3 mt-12 relative">
                 <div className="">
-                    <h1 className="text-5xl max-md:text-3xl font-bold leading-loose mt-5 relative">
+                    <h1 className="text-5xl max-md:text-3xl max-lg:text-4xl font-bold leading-loose mt-5 relative">
                         Optimize Your Online Experience with
                         Our  <br /> Advanced
                         <span className="text-blue-600"> URL Shortening
