@@ -4,12 +4,16 @@ import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
 import axios from 'axios';
 import { JWT } from 'next-auth/jwt';
-import { Session } from "next-auth";
+import { Session, User } from "next-auth";
 
 interface MyToken extends JWT {
   accessToken?: string; // assuming the accessToken is stored in the token
   // any other custom fields in your token should be added here
 }
+interface ExtendedUser extends User {
+  token?: string; // Add the token property
+}
+
 
 // Extend the Session type to include accessToken
 interface MySession extends Session {
@@ -72,8 +76,9 @@ const handler = NextAuth({
         callbacks: {
           async jwt({ token, user, account }) {
               // If the user just logged in or the account is updated, add the token to the JWT
-              if (account && user) {
-                  token.accessToken = user.token;
+              const extendedUser = user as ExtendedUser; // Type assertion
+              if (account && extendedUser?.token) {
+                token.accessToken = extendedUser.token;
               }
               return token;
           }, async session({ session, token }) {
