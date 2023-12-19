@@ -50,10 +50,10 @@ const handler = NextAuth({
                 // Extract user data from the response
                 const {user,token}:{user:any,token:string} = response.data;
                 console.log({user,token})
-          
+
                 // Check if the response is successful and user data is present
                 if (response.status === 200 && user) {
-                  return {  name: user.username, email: user.email,token:token };
+                  return   user;
                 }else{
                     throw new Error("failed login");
                     
