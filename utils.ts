@@ -1,0 +1,1 @@
+export const SHORTNER_API_ROUTE = process.env.BACKEND_API_ROUTE 

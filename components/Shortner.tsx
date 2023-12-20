@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { Session } from 'next-auth';
+import { SHORTNER_API_ROUTE } from '@/utils';
 
 
 interface MySession extends Session {
@@ -37,9 +38,13 @@ function URLShortenerForm() {
           },
         }
       );
-console.log({response})
-      if (response.data?.shortenedUrl) {
-        setShortenedUrl(response.data.shortenedUrl);
+console.log(response.data.data)
+
+      if (response.data?.data?.newShortUrl) {
+        console.log("here")
+      const   shortId = response.data?.data?.newShortUrl?.shortId
+        const shortUri = `https://cherubin-shortner.onrender.com/api/short/${shortId}`
+        setShortenedUrl(shortUri);
       }
     } catch (error) {
       console.error('An error occurred while shortening the URL:', error);
