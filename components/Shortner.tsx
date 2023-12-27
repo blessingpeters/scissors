@@ -56,7 +56,7 @@ console.log(response.data.data)
 
   return (
     <section className='bg-[#1E3448] flex justify-center items-center py-20 max-md:px-3'>
-      <form onSubmit={handleSubmit} className='bg-white flex flex-col justify-center p-12 max-md:px-8 rounded-xl max-w-[476px]'>
+      <form onSubmit={handleSubmit} className='bg-white flex flex-col justify-center p-12 max-md:px-8 rounded-xl max-w-[476px] w-full'>
         <input
           className='border border-blue-600 rounded-xl px-5 py-3 placeholder:text-blue-600'
           type="text"
@@ -86,15 +86,16 @@ console.log(response.data.data)
           {loading ? 'Trimming...' : 'Trim'}
         </button>
         {error && <p className="text-red-500">{error}</p>}
-      </form>
-      {shortenedUrl && (
-        <div className="mt-4 p-4 border border-blue-600 rounded-md">
+        {shortenedUrl && (
+        <div className="mt-4 whitespace-nowrap">
           <h3 className="font-bold text-blue-600">Shortened URL:</h3>
           <a href={shortenedUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
             {shortenedUrl}
           </a>
         </div>
       )}
+      </form>
+
     </section>
   );
 }
