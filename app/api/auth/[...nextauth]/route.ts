@@ -2,16 +2,16 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from 'axios';
 import { JWT } from 'next-auth/jwt';
 import { Session, User } from "next-auth";
+import { auth } from "@/utils/FirebaseAdmin";
+
 
 interface MyToken extends JWT {
-  accessToken?: string; // assuming the accessToken is stored in the token
-  // any other custom fields in your token should be added here
+  accessToken?: string;
 }
 interface ExtendedUser extends User {
-  token?: string; // Add the token property
+  token?: string;
 }
 
 
@@ -41,37 +41,35 @@ const handler = NextAuth({
           CredentialsProvider({
             name: 'Credentials',
             credentials: {
-              username: { label: "Username", type: "text", placeholder: "jsmith" },
+              email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
               password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-              try {
-                // Make a POST request to your authentication API endpoint using Axios
-                const response = await axios.post("https://cherubin-shortner.onrender.com/api/auth/login", credentials, {
-                  headers: { "Content-Type": "application/json" }
-                });
+              console.log("Authorizing:", credentials);
+              // Check if credentials are defined and both email and password are provided
+              if (!credentials || !credentials.email || !credentials.password) {
+                console.log('Credentials are missing or incomplete');
+                return null; // Early return if credentials are missing or incomplete
+              }
           
-                // Extract user data from the response
-                const {user,token}:{user:any,token:string} = response.data;
-                console.log({user,token})
+              try {
+                // Authenticate against Firebase
+                const { email, password } = credentials;
+                const userRecord = await auth.getUserByEmail(email); // Assuming auth is correctly imported from Firebase Admin
 
-                // Check if the response is successful and user data is present
-                if (response.status === 200 && user) {
-                  return   user;
-                }else{
-                    throw new Error("failed login");
-                    
-                }
 
-                // If the response is not successful or user data is missing, return null
+                // Return user data for NextAuth
+                const user = { id: userRecord.uid, email: userRecord.email, name: userRecord.displayName };
+                return user;
 
-              } catch (error:any) {
-                // Handle any errors that occur during the API request
-                console.error("Authentication error:", error?.data);
-                return null; // Return null in case of an error
+              } catch (error) {
+                console.error('Error in Firebase Authentication:', error);
+                return null;
               }
             }
           }),
+
+
         ],
         callbacks: {
           async jwt({ token, user, account }) {

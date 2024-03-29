@@ -4,12 +4,17 @@ import { AppleBtn, GoogleBtn } from '@/components/common/AuthButton'
 import Image from 'next/image';
 import { useRouter, redirect } from 'next/navigation';
 import { SessionContext, getSession, signIn } from 'next-auth/react';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/firebase';
 
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState('');
+
     const sessionContext = useContext(SessionContext)
 
     const router = useRouter()
@@ -22,36 +27,47 @@ const Login = () => {
     const [loginError, setLoginError] = useState('');
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        setLoginError(''); // Clear any previous error message
+        setLoginError('');
 
         try {
+            await signInWithEmailAndPassword(auth, email, password);
             const result = await signIn('credentials', {
                 email,
                 password,
                 callbackUrl: '/',
-                redirect: false,  // Prevent automatic redirection
+                redirect: false,
             });
 
             if (result?.error) {
-                // If there's an error, set the error message to state to display to the user
                 setLoginError(result.error);
             } else {
 
                 if (sessionContext?.update) {
                     // Fetch updated session data and update the context
-                    const updatedSession = await getSession(); // Make sure you have imported getSession
+                    const updatedSession = await getSession();
                     sessionContext.update(updatedSession);
                     console.log("Updated session:", updatedSession);
-                    // Redirect or perform other actions post login
-                  }
-                console.log({result})
-                // If signIn was successful, redirect or do something else
-                router.push('/');  // or whatever your logic needs
+
+                }
+                console.log({ result })
+
+                router.push('/');
             }
         } catch (error) {
-            // Handle or log error as needed
             console.error('Error signing in:', error);
-        }
+            let errorMessage = 'Login failed. Please try again.';
+
+            // if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            //   errorMessage = 'Invalid email or password. Please try again.';
+            // } else if (error.code === 'auth/invalid-email') {
+            //   errorMessage = 'Invalid email format. Please check and try again.';
+            // }
+          
+            // Show the popup with the error message
+            setPopupMessage(errorMessage);
+            setShowPopup(true);
+          }
+
     };
 
 
@@ -60,6 +76,12 @@ const Login = () => {
     return (
         <section className='flex items-center justify-center h-[100vh]'>
             <form className='text-center p-2 lg:w-[426px]' onSubmit={handleSubmit}>
+            {showPopup && (
+                <div className="absolute right-0 top-0 flex justify-between bg-red-500 text-white p-4">
+                    <p>{popupMessage}</p>
+                    <button onClick={() => setShowPopup(false)}>Close</button>
+                </div>
+            )}
                 <p>Log in with:</p>
                 <div className='flex mt-6 gap-5 justify-center'>
                     <GoogleBtn />
@@ -67,7 +89,7 @@ const Login = () => {
                 </div>
                 <p className='or my-6'>Or</p>
                 <div className='flex flex-col gap-8'>
-                    <input className='border border-blue-600 rounded-xl px-5 py-3' type="text" name="url" id="email" placeholder='Email address or username'  onChange={(e) => setEmail(e.target.value)}/>
+                    <input className='border border-blue-600 rounded-xl px-5 py-3' type="text" name="url" id="email" placeholder='Email address or username' onChange={(e) => setEmail(e.target.value)} />
                     <div className='relative'>
                         <input
                             className='w-full border border-blue-600 rounded-xl px-5 py-3'
@@ -90,7 +112,7 @@ const Login = () => {
 
                 <p className='text-blue-600 text-right my-4'>Forgot your password?</p>
                 <button type='submit' className='text-white w-full bg-blue-600 px-6 py-3 rounded-full cursor-pointer'
-                disabled={!email || !password}>Login</button>
+                    disabled={!email || !password}>Login</button>
                 <p className='my-5 text-sm'>Don’t have an account? <a className='text-blue-600' href="/signup">Sign up</a></p>
                 <p className='text-xs'>By signing in with an account, you agree to</p>
                 <p className='text-xs'>Sciccors Terms of Service, Privacy Policy and Acceptable Use Policy.</p>

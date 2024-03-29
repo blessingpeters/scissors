@@ -1,12 +1,10 @@
 "use client"
-import React, { FormEvent, useState } from 'react'
-import Image from 'next/image'
-import { GoogleBtn, AppleBtn } from '@/components/common/AuthButton'
-import axios, { AxiosError } from 'axios';
+import React, { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-// import { signIn } from 'next-auth/react'
-// import { createUserWithEmailAndPassword } from 'firebase/auth';
-// import { auth } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase';
+import { GoogleBtn, AppleBtn } from '@/components/common/AuthButton';
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
@@ -15,9 +13,8 @@ const SignUp = () => {
     const [passwordAgain, setPasswordAgain] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordAgain, setShowPasswordAgain] = useState(false);
-    const [signUpSuccess, setSignUpSuccess] = useState(false);
-    const router = useRouter()
-
+    const [signUpSuccess, setSignUpSuccess] = useState(false); 
+    const router = useRouter();
 
     const togglePasswordVisibility = (field: string) => {
         if (field === "password") {
@@ -29,44 +26,29 @@ const SignUp = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        // Add a check to ensure passwords match
         if (password !== passwordAgain) {
             alert("Passwords don't match");
             return;
         }
-        console.log(username, email, password)
 
         try {
-            const response = await axios.post('https://cherubin-shortner.onrender.com/api/auth/signup', {
-                username,
-                email,
-                password
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            console.log(response.data);
+            await createUserWithEmailAndPassword(auth, email, password);
+            console.log('Sign up successful');
             setSignUpSuccess(true);
 
-            // Optionally, you can redirect the user after a delay
+
             setTimeout(() => {
-                router.push('/login'); // redirect to the homepage
+                router.push('/login');
             }, 2000);
-            // Redirect user to another page or display a success message
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const serverError = error as AxiosError;
-                console.error('Error signing up:', serverError.response?.data);
+            if (error instanceof Error) {
+                console.error('Error signing up:', error.message);
             } else {
                 console.error('An unknown error occurred:', error);
             }
         }
     };
 
-    // const signup = () => {
-    //     createUserWithEmailAndPassword(auth, email, password);
-    //   };
     return (
         <section className='flex items-center justify-center h-[100vh]'>
             <form className='text-center p-2 lg:w-[426px]' onSubmit={handleSubmit}>
