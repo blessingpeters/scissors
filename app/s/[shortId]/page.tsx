@@ -1,27 +1,24 @@
 'use client'
 import { useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-interface ShortUrlRedirectProps {
-  docId: string;
-}
-const ShortUrlRedirect: React.FC<ShortUrlRedirectProps> = ({ docId }) => {
 
-  const pathname = usePathname();
-  // const docId = pathname.split('/').pop();
+export default function ShortUrlRedirect() {
   const router = useRouter();
+  const urlParams = new URLSearchParams(window.location.search);
+  const docId = urlParams.get('docId');
 
   useEffect(() => {
-    console.log('ShortUrlRedirect component loaded with shortId:', docId);
     const redirectToOriginalUrl = async () => {
-      if (!docId) return;
+      if (!docId) return; // Ensure docId is present
 
       try {
         const docRef = doc(db, 'shortenedUrls', docId);
         const docSnap = await getDoc(docRef);
-        console.log(docSnap.data())
+
         if (docSnap.exists() && docSnap.data().originalUrl) {
+          // Redirect to the original URL
           router.push(docSnap.data().originalUrl);
         } else {
           console.error('No URL found for:', docId);
@@ -32,9 +29,13 @@ const ShortUrlRedirect: React.FC<ShortUrlRedirectProps> = ({ docId }) => {
       }
     };
 
-    redirectToOriginalUrl();
-  }, [docId, router]);
+    // Wait for the router to be ready before trying to read the query parameters
+    // This is necessary because on the first render, query parameters may not be available immediately
+
+      redirectToOriginalUrl();
+
+  }, [router, docId]); // Re-run the effect if docId changes
 
   return <p>Redirecting...</p>;
 }
-export default ShortUrlRedirect;
+

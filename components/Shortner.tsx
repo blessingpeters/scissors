@@ -1,58 +1,55 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { db } from '@/firebase'; // Adjust this path to your Firebase config
+import { collection, addDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
-import { Session } from 'next-auth';
-import { SHORTNER_API_ROUTE } from '@/utils';
-
-
-interface MySession extends Session {
-  accessToken?: string;  // use the exact property name as it appears in your actual session object
-}
+import { useRouter } from 'next/navigation';
 
 function URLShortenerForm() {
-  const { data: sessionData } = useSession();
-  const session = sessionData as MySession;
-  const [url, setUrl] = useState('');
-  const [alias, setAlias] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [shortenedUrl, setShortenedUrl] = useState('');
-  const [error, setError] = useState('');
+  const { data: session } = useSession();
+  const [url, setUrl] = useState<string>('');
+  const [alias, setAlias] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [shortenedUrl, setShortenedUrl] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const generateShortId = (alias: string): string => {
+    return alias || Math.random().toString(36).substr(2, 8);
+  };
+    const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setLoading(true);
-    setError(''); // Clear any previous error
+    setError('');
+    const shortId = generateShortId(alias);
 
-    try {
-      const response = await axios.post(
-        'https://cherubin-shortner.onrender.com/api/url',
-        {
-          destination:url,
-          // url, // this is the long URL value
-          // domain: 'scissors.com', // this value can be dynamic based on your needs
-          alias, // this is the alias for the URL
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${session?.accessToken}`, // assuming the token is stored in accessToken property
-          },
-        }
-      );
-console.log(response.data.data)
+    const data = {
+      originalUrl: url,
+      shortId: shortId,
+      createdAt: new Date(),
+      userId: session?.user?.email
+    };
 
-      if (response.data?.data?.newShortUrl) {
-        console.log("here")
-      const   shortId = response.data?.data?.newShortUrl?.shortId
-        const shortUri = `https://cherubin-shortner.onrender.com/api/short/${shortId}`
+    // Add document to Firestore and get the auto-generated ID
+    addDoc(collection(db, 'shortenedUrls'), data)
+      .then(docRef => {
+        console.log('Document written with ID: ', docRef.id);
+        
+
+        // router.push(`/s/${shortId}?docId=${docRef.id}`);
+        const shortUri = `${window.location.origin}/s/${shortId}`;
         setShortenedUrl(shortUri);
-      }
-    } catch (error) {
-      console.error('An error occurred while shortening the URL:', error);
-      setError('An error occurred. Please try again.'); // Set error message
-    } finally {
-      setLoading(false);
-    }
+      })
+      .catch(err => {
+        console.error('Error adding document: ', err);
+        setError('Failed to shorten the URL. Please try again.');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
+
+
 
   return (
     <section className='bg-[#1E3448] flex justify-center items-center py-20 max-md:px-3'>
