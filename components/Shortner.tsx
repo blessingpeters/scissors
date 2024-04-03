@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { db } from '@/firebase'; // Adjust this path to your Firebase config
 import { collection, addDoc } from 'firebase/firestore';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 
 function URLShortenerForm() {
   const { data: session } = useSession();
@@ -15,7 +14,6 @@ function URLShortenerForm() {
   const generateShortId = (alias: string): string => {
     return alias || Math.random().toString(36).substr(2, 8);
   };
-    const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -23,33 +21,23 @@ function URLShortenerForm() {
     setError('');
     const shortId = generateShortId(alias);
 
-    const data = {
-      originalUrl: url,
-      shortId: shortId,
-      createdAt: new Date(),
-      userId: session?.user?.email
-    };
-
-    // Add document to Firestore and get the auto-generated ID
-    addDoc(collection(db, 'shortenedUrls'), data)
-      .then(docRef => {
-        console.log('Document written with ID: ', docRef.id);
-        
-
-        // router.push(`/s/${shortId}?docId=${docRef.id}`);
-        const shortUri = `${window.location.origin}/s/${shortId}`;
-        setShortenedUrl(shortUri);
-      })
-      .catch(err => {
-        console.error('Error adding document: ', err);
-        setError('Failed to shorten the URL. Please try again.');
-      })
-      .finally(() => {
-        setLoading(false);
+    try {
+      await addDoc(collection(db, 'shortenedUrls'), {
+        originalUrl: url,
+        shortId: shortId,
+        createdAt: new Date(),
+        userId: session?.user?.email
       });
+
+      const shortUri = `${window.location.origin}/s/${shortId}`;
+      setShortenedUrl(shortUri);
+    } catch (err) {
+      console.error('Error saving the URL:', err);
+      setError('Failed to shorten the URL. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
-
-
 
   return (
     <section className='bg-[#1E3448] flex justify-center items-center py-20 max-md:px-3'>

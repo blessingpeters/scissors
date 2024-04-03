@@ -2,40 +2,40 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
-export default function ShortUrlRedirect() {
+export default function ShortUrlRedirect({ params }: { params: { shortId: string } }) {
   const router = useRouter();
-  const urlParams = new URLSearchParams(window.location.search);
-  const docId = urlParams.get('docId');
+  const { shortId } = params;
 
   useEffect(() => {
-    const redirectToOriginalUrl = async () => {
-      if (!docId) return; // Ensure docId is present
+    const redirectToOriginalUrl = async (shortId: string): Promise<void> => {
+      if (!shortId) return;
+
+      const q = query(collection(db, "shortenedUrls"), where("shortId", "==", shortId));
 
       try {
-        const docRef = doc(db, 'shortenedUrls', docId);
-        const docSnap = await getDoc(docRef);
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
 
-        if (docSnap.exists() && docSnap.data().originalUrl) {
-          // Redirect to the original URL
-          router.push(docSnap.data().originalUrl);
+          const docData = querySnapshot.docs[0].data();
+          if (docData.originalUrl) {
+            router.replace(docData.originalUrl);
+          } else {
+            console.error('Document does not contain an original URL.');
+            //TODO: Redirect to a 404 page or home page
+          }
         } else {
-          console.error('No URL found for:', docId);
-          // Optional: Redirect to a 404 page or home page
+          console.error('No document found for:', shortId);
+          //TODO: Redirect to a 404 page or home page
         }
       } catch (error) {
-        console.error('Error fetching document:', error);
+        console.error('Error querying document:', error);
       }
     };
 
-    // Wait for the router to be ready before trying to read the query parameters
-    // This is necessary because on the first render, query parameters may not be available immediately
-
-      redirectToOriginalUrl();
-
-  }, [router, docId]); // Re-run the effect if docId changes
+    redirectToOriginalUrl(shortId);
+  }, [shortId, router]);
 
   return <p>Redirecting...</p>;
 }
-
